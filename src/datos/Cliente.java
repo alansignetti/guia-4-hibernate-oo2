@@ -1,7 +1,6 @@
 package datos;
 
 import java.time.LocalDate;
-import java.util.Iterator;
 import java.util.Set;
 import negocio.Funciones;
 
@@ -82,16 +81,37 @@ public class Cliente {
 		this.eventos = eventos;
 	}
 
-	public boolean equals(Cliente c) {
+	
+
+	
+
+	
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (int) (idCliente ^ (idCliente >>> 32));
+		return result;
+	}
+
+	public boolean equals(Object obj) {
+		return idCliente == ((Cliente)obj).getIdCliente();
 	}
 
 	public boolean agregar(Evento evento) {
-	}
 
-	public boolean eliminar(Evento evento) {
-	}
+        return eventos.add(evento);
 
+    }
+
+    public boolean eliminar(Evento evento) {
+
+        return eventos.remove(evento);
+
+    }
+    
 public String toString(){
-return (idCliente+" "+apellido+" "+nombre+" DNI: "+dni+" F.de Nacimiento:"+Funciones.traerFechaCorta(fechaDeNacimiento)+" "+baja);
+return (idCliente+" "+apellido+" "+nombre+" DNI: "+dni+" F.de Nacimiento:"+Funciones.traerFechaCorta(fechaDeNacimiento)+" "+baja + "\nEventos: "+ getEventos());
 }
 }

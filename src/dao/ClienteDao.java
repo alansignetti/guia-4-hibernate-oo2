@@ -96,18 +96,7 @@ public class ClienteDao {
 		return lista;
 	}
 
-	public Cliente traerClienteYPrestamos(long idCliente) throws HibernateException {
-		Cliente objeto = null;
-		try {
-			iniciaOperacion();
-			String hql = "from Cliente c where c.idCliente =" + idCliente;
-			objeto = (Cliente) session.createQuery(hql).uniqueResult();
-			Hibernate.initialize(objeto.getPrestamos());
-		} finally {
-			session.close();
-		}
-		return objeto;
-	}
+	
 
 	public Cliente traerClienteYEventos(long idCliente) throws HibernateException {
 		Cliente objeto = null;

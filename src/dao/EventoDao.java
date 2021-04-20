@@ -4,10 +4,9 @@ import java.util.List;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import datos.Cliente;
-import datos.Prestamo;
+import datos.Evento;
 
-public class PrestamoDao {
+public class EventoDao {
 	private static Session session;
 	private Transaction tx;
 
@@ -21,7 +20,7 @@ public class PrestamoDao {
 		throw new HibernateException("ERROR en la capa de acceso a datos", he);
 	}
 
-	public int agregar(Prestamo objeto) {
+	public int agregar(Evento objeto) {
 		int id = 0;
 		try {
 			iniciaOperacion();
@@ -36,19 +35,7 @@ public class PrestamoDao {
 		return id;
 	}
 
-	public Prestamo traer(long idPrestamo) throws HibernateException {
-		Prestamo obj = null;
-		try {
-			iniciaOperacion();
-			String hQL = "from Prestamo p inner join fetch p.cliente c where p.idPrestamo=" + idPrestamo;
-			obj = (Prestamo) session.createQuery(hQL).uniqueResult();
-		} finally {
-			session.close();
-		}
-		return obj;
-	}
-
-	public void actualizar(Prestamo objeto) throws HibernateException {
+	public void actualizar(Evento objeto) throws HibernateException {
 		try {
 			iniciaOperacion();
 			session.update(objeto);
@@ -61,16 +48,44 @@ public class PrestamoDao {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	public List<Prestamo> traer(Cliente c) throws HibernateException {
-		List<Prestamo> lista = null;
+	public void eliminar(Evento objeto) throws HibernateException {
 		try {
 			iniciaOperacion();
-			String hQL = "from Prestamo p inner join fetch p.cliente c where c.idCliente=" + c.getIdCliente();
-			lista = session.createQuery(hQL).list();
+			session.delete(objeto);
+			tx.commit();
+		} catch (HibernateException he) {
+			manejaExcepcion(he);
+			throw he;
+		} finally {
+			session.close();
+		}
+	}
+
+	public Evento traer(long idEvento) throws HibernateException {
+		Evento objeto = null;
+		try {
+			iniciaOperacion();
+			objeto = (Evento) session.get(Evento.class, idEvento);
+		} finally {
+			session.close();
+		}
+		return objeto;
+	}
+
+
+
+	@SuppressWarnings("unchecked")
+	public List<Evento> traer() throws HibernateException {
+		List<Evento> lista = null;
+		try {
+			iniciaOperacion();
+			lista = session.createQuery("from Evento c order by c.evento").list();
 		} finally {
 			session.close();
 		}
 		return lista;
 	}
+
+
+
 }
